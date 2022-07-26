@@ -1,22 +1,38 @@
 import React from "react";  
 
-const CustomIngredient = ()=>{
-
+const CustomIngredient = ({removeIngs,extraIngs})=>{
+    console.log(removeIngs + "from cusIng");
     return(
-        <div className="border-dotted">
-            <div>
-                <p>remove</p>
-                <li>
-                    <p className="underline">garlic</p>
+        <div className="m-4 px-2 border-4 border-dashed">
+            <div className="p-1">
+                <strong>remove</strong>
+                <li className="flex">
+                    {
+                        removeIngs.map((item)=>(
+                            <p className="line-through mx-1">{item},</p>
+                        ))
+                    }
+                    
                 </li>
+                <li className="flex mx-1">
+                    
+                </li>
+                
             </div>
-            <div>
-                <p>Extra</p>
-                <li>
-                    <span>x2</span>
-                    <p>cheese</p>
-                    <span>+ Rs: 20</span>
-                </li>
+            <div className="p-1">
+                <strong>Extra</strong>
+                {
+                (extraIngs.length > 1) &&
+                extraIngs.map((obj)=>(
+                    <li className="flex relative mx-1 my-4"> 
+                        <div className="flex">
+                            <p className="z-20 mx-1">{obj.name}</p>
+                            <span>+ <span className="text-gray-400">Rs: {obj.price}</span></span>
+                            <span className="absolute -left-2 -top-3 px-1 rounded-full bg-gray-300 z-10">x{obj.c}</span>
+                        </div>
+                    </li>
+                ))
+                }
             </div>
         </div>
     )
