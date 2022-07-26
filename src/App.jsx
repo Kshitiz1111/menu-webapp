@@ -207,51 +207,70 @@ function App() {
     setExtraIngs([{}]);
   }
   //close ingredient
-  const closeIngredentHandler = ()=>{
-    setOpenIngredent(false);
-  }
+
+  // const closeIngredentHandler = ()=>{
+  //   setOpenIngredent(false);
+  // }
   //close order
-  const closeOrderHandler = ()=>{
-    setOpenOrder(false);
-  }
+  
+  // const closeOrderHandler = ()=>{
+  //   setOpenOrder(false);
+  // }
   console.log(openIngredent);
+  console.log(openOrder);
 
   //for remove and extra in customIngredient
   const [removeIngs , setRemoveIngs] = React.useState([]);
   const [extraIngs , setExtraIngs] = React.useState([{}]);
-  //cusIngHandler = customIngredientHandler
 
-  function ifExisted(arrList,singleIng){
+//check if item exist on array state
+
+  function ifExisted(arrList,singleIng,btn){
     let result;
 
     for (let index = 0; index < arrList.length; index++) {
-      result = (arrList[index].name == singleIng.name)?  true: false;
+      result = (arrList[index].name === singleIng.name)?  true: false;
 
-      if(result == true){
+      
+      if(result === true && btn === "extra"){
         // console.log(result + " from ifExisted inside map");
+
+        arrList[index].c += 1;
+        //revisit
+        arrList[index].price += arrList[index].initPrice;
+        
+        console.log( "count : " + arrList[index].c);
+        return result;
+      }else if(result === true && btn === "remove"){
+        arrList[index].c = 0;
+        console.log("count : " + arrList[index].c);
         return result;
       }
     }
     // console.log(result + " from ifExisted");
     return result;
   }
+//cusIngHandler = customIngredientHandler
   const cusIngHandler = (cusIng,btn)=>{
     switch (btn) {
       case 'remove':
         if( removeIngs.includes(cusIng.name) ){
             console.log('already included');
         }else{
-          if(ifExisted(extraIngs,cusIng)){
+          //pop selected item from extra arr if selected item exists 
+          if(ifExisted(extraIngs,cusIng,btn)){
             setExtraIngs(
               extraIngs.filter((item)=>(
-              item.name != cusIng.name
+              item.name !== cusIng.name
               ))
             )
+          //and put that selected item into remove ings arr
             setRemoveIngs(
               oldArr => [...oldArr,cusIng.name]
             );
           console.log(extraIngs + 'modified ex');
           }else{
+            //if selected item doesnot exist in extra arr add it to remove arr
             setRemoveIngs(
               oldArr => [...oldArr,cusIng.name]
             );
@@ -263,20 +282,25 @@ function App() {
       case 'extra':
         setRemoveIngs(
           removeIngs.filter((item)=>(
-            cusIng.name != item
+            cusIng.name !== item
           ))
         )
-        let count = 0;
+        let count = 1;
 
-        if(ifExisted(extraIngs,cusIng)){
+        if(ifExisted(extraIngs,cusIng,btn)){
           console.log("already in added to extra");
-        }else if(ifExisted(extraIngs,cusIng) == false){
+        }else if(ifExisted(extraIngs,cusIng,btn) === false){
           setExtraIngs(
-            oldObj => [...oldObj,{name:cusIng.name,price:cusIng.price,c:count}]
+            //revisit for initprice
+            oldObj => [...oldObj,{name:cusIng.name,initPrice:cusIng.price,price:cusIng.price,c:count}]
           )
         }
 
 
+      break;
+      case "reset":
+        setExtraIngs([{}]);
+        setRemoveIngs([]); 
       break;
       default:
       break;

@@ -21,7 +21,10 @@ const Ingredient = ({selectedDish,clickHandler,cusIngHandler,removeIngs,extraIng
                     }
                 </div>
 
-                <p><strong>Customizable Ingredient</strong></p>
+                <div className="flex justify-between relative">
+                    <p><strong>Customizable Ingredient</strong></p>
+                    <span onClick={()=>(cusIngHandler("","reset"))} className="absolute top-0 right-0 py-1 px-2 text-white bg-black rounded-full shadow-md hover:cursor-pointer hover:shadow-inner hover:bg-gray-300 hover:text-black">reset</span>
+                </div>
                 <p>you can customized below items according to you preference</p>
                 <div className="p-2">
                    <ul>
