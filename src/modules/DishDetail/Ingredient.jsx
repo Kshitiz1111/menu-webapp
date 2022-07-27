@@ -7,9 +7,10 @@ const Ingredient = ({selectedDish,clickHandler,cusIngHandler,removeIngs,extraIng
     // console.log(extraIngs);
 
     return(
-
-        <div className="absolute inset-x-0 top-28 rounded-xl p-5 m-6 bg-gray-100">
-            <span className="absolute left-5 p-2 rounded-full bg-gray-300" onClick={()=>(clickHandler(selectedDish,false,false))}>back</span>
+    <>
+        <div className="absolute inset-0 bg-gray-400 blur-3xl"></div>
+        <div className="absolute inset-x-0 top-28 rounded-xl p-5 m-6 bg-gray-100 shadow-md ">
+            <span className="absolute left-5 p-2 rounded-full bg-gray-400 shadow-md" onClick={()=>(clickHandler(selectedDish,false,false))}>back</span>
             <span className="absolute right-5 font-bold ">{selectedDish.name}</span>
             <div className="mt-16">
                 <p><strong>Base Ingredient</strong></p>
@@ -47,12 +48,12 @@ const Ingredient = ({selectedDish,clickHandler,cusIngHandler,removeIngs,extraIng
                 <div>
                     <div>
                         <span className="text-xs">proceed to</span>
-                        <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400">Order</div>
+                        <div onClick={()=>(clickHandler(selectedDish,true,true))} className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md">Order</div>
                     </div>
                 </div>
             </div>
         </div>  
-
+    </>
     )
      
 }

@@ -23,8 +23,8 @@ const CustomIngredient = ({removeIngs,extraIngs})=>{
                 <strong>Extra</strong>
                 {
                 (extraIngs.length > 1) &&
-                extraIngs.map((obj)=>(
-                    <li className="flex relative mx-1 my-4"> 
+                extraIngs.map((obj,index)=>(
+                    <li className="flex relative mx-1 my-4" key={index}> 
                         <div className="flex">
                             <p className="z-20 mx-1">{obj.name}</p>
                             <span>+ <span className="text-gray-400">Rs: {obj.price}</span></span>

@@ -5,6 +5,7 @@ import {Menu} from './modules/Menu';
 import {Dish} from './modules/Dish';
 import { DishDisplay } from './modules/DishDetail/DishDisplayCard';
 import {Ingredient} from './modules/DishDetail/Ingredient'
+import { AddToOrder } from './modules/DishDetail/AddToOrder';
 import React from 'react';
 
 const userVisited = {
@@ -326,6 +327,9 @@ function App() {
       }
       {
         (openIngredent)?<Ingredient selectedDish = {getItem} clickHandler={clickHandler} cusIngHandler={cusIngHandler} removeIngs={removeIngs} extraIngs={extraIngs}></Ingredient>:""
+      }
+      {
+        (openOrder)?<AddToOrder selectedDish = {getItem} clickHandler={clickHandler} removeIngs={removeIngs} extraIngs={extraIngs}></AddToOrder> : ""
       }
     </>
   );
