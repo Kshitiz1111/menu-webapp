@@ -6,6 +6,7 @@ import {Dish} from './modules/Dish';
 import { DishDisplay } from './modules/DishDetail/DishDisplayCard';
 import {Ingredient} from './modules/DishDetail/Ingredient'
 import { AddToOrder } from './modules/DishDetail/AddToOrder';
+import { OrderList } from './modules/OrderList';
 import React from 'react';
 
 const userVisited = {
@@ -308,9 +309,37 @@ function App() {
     }
   }
 
+
+  //orderlist
+  const [active, setActive] = React.useState(false)
+  const orderListToggleHandler = (flag)=>{
+      setActive(flag);    
+      
+  }
+
+  const [orders, setOrders] = React.useState([]);
+  const addToOrderListHandler = (dish, price, value, rIngs, eIngs)=>{
+    setOrders(
+      (obj)=>[
+              ...obj,
+                {
+                  id: dish.id,
+                  name: dish.name,
+                  quantity: value,
+                  price: price,
+                  removeIngs: rIngs,
+                  extraIngs: eIngs 
+                }
+              ])
+    console.log(orders);
+  }
+
   return (
     <>
-      <Nav></Nav>
+      {
+        (active === true)? <OrderList removeIngs={removeIngs} extraIngs={extraIngs} orders={orders}></OrderList> : ''
+      }
+      <Nav orderListToggleHandler={orderListToggleHandler}></Nav>
       <CustomerChoice dish={Dishes} maxSize='10' clickHandler={clickHandler}></CustomerChoice>
       <Menu></Menu>
       
@@ -329,7 +358,7 @@ function App() {
         (openIngredent)?<Ingredient selectedDish = {getItem} clickHandler={clickHandler} cusIngHandler={cusIngHandler} removeIngs={removeIngs} extraIngs={extraIngs}></Ingredient>:""
       }
       {
-        (openOrder)?<AddToOrder selectedDish = {getItem} clickHandler={clickHandler} removeIngs={removeIngs} extraIngs={extraIngs}></AddToOrder> : ""
+        (openOrder)?<AddToOrder selectedDish = {getItem} clickHandler={clickHandler} removeIngs={removeIngs} extraIngs={extraIngs} addToOrderListHandler={addToOrderListHandler}></AddToOrder> : ""
       }
     </>
   );

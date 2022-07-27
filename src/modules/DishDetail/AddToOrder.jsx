@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {CustomIngredient} from "./CustomIngredient";
-const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs} )=>{
+const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs,addToOrderListHandler} )=>{
     const [value, setValue] = React.useState(1);
     const [extraItemPrice, setExtraItemPrice] = React.useState();
     const [finalPrice, setFinalPrice] = React.useState(selectedDish.price);
@@ -56,7 +56,7 @@ const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs} )=>{
                    
                     <div>
                         <span className="text-xs">add to</span>
-                        <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md">Order List</div>
+                        <div onClick={()=>(addToOrderListHandler(selectedDish,finalPrice, value,removeIngs,extraIngs))} className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md">Order List</div>
                     </div>
                 </div>
             </div>
