@@ -11,7 +11,7 @@ const Nav = ({orderListToggleHandler})=>{
             <img src={logo} className='w-10' alt="brandlogo" />
             <p className='ml-2 self-end'>Sample cafe</p>
         </div>
-        <div onClick={()=>(orderListToggleHandler(true))}>
+        <div onClick={orderListToggleHandler}>
             <img src={cartlistbtn} className='w-10' alt="cartlist" />
         </div>
        </div>

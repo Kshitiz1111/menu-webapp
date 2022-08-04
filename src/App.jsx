@@ -1,19 +1,18 @@
 import './App.css';
-import {Nav} from './modules/Nav';
-import {CustomerChoice} from './modules/CustomerChoice';
-import {Menu} from './modules/Menu';
-import {Dish} from './modules/Dish';
-import { DishDisplay } from './modules/DishDetail/DishDisplayCard';
-import {Ingredient} from './modules/DishDetail/Ingredient'
-import { AddToOrder } from './modules/DishDetail/AddToOrder';
-import { OrderList } from './modules/OrderList';
 import React from 'react';
+import {BrowserRouter, Route,Routes} from "react-router-dom";
+import { Home } from './pages/Home';
+import { Starter } from './pages/Starter';
 
-const userVisited = {
-  visited: true,
-  recentOrderNo: 6
-}
+
+
 function App() {
+
+  const userVisited = {
+    visited: true,
+    recentOrderNo: 6
+  }
+
   const Dishes = [
     { id: 1, img_src: "", name: "Pasta1", price: "200",
       baseIngredient: ["semolina flour","egg yolk"],
@@ -187,7 +186,7 @@ function App() {
     },
   ];
 
-//open and close dish on selecting
+  //open and close dish on selecting
   let [open, setOpen] = React.useState(false);
   let [openIngredent, setOpenIngredent] = React.useState(false);
   let [openOrder, setOpenOrder] = React.useState(false);
@@ -199,6 +198,8 @@ function App() {
     (ingredent)? setOpenIngredent(true) : setOpenIngredent(false);
     (order)? setOpenOrder(true) : setOpenOrder(false);
   }
+
+  
   const closeHandler = ()=>{
     setOpen(false);
     setOpenIngredent(false);
@@ -208,160 +209,223 @@ function App() {
     setRemoveIngs([]);
     setExtraIngs([{}]);
   }
-  //close ingredient
-
-  // const closeIngredentHandler = ()=>{
-  //   setOpenIngredent(false);
-  // }
-  //close order
-  
-  // const closeOrderHandler = ()=>{
-  //   setOpenOrder(false);
-  // }
-  console.log(openIngredent);
-  console.log(openOrder);
-
   //for remove and extra in customIngredient
   const [removeIngs , setRemoveIngs] = React.useState([]);
   const [extraIngs , setExtraIngs] = React.useState([{}]);
 
+//for edit remove and extra in customIngredient
+const [editRemoveIngs , setEditRemoveIngs] = React.useState([]);
+const [editExtraIngs , setEditExtraIngs] = React.useState([{}]);
 //check if item exist on array state
 
-  function ifExisted(arrList,singleIng,btn){
-    let result;
+function ifExisted(arrList,singleIng,btn){
+ let result;
 
-    for (let index = 0; index < arrList.length; index++) {
-      result = (arrList[index].name === singleIng.name)?  true: false;
+ for (let index = 0; index < arrList.length; index++) {
+   if(btn === "extra"){
+     result = (arrList[index].name === singleIng.name)?  true: false;
+   }else if(btn === "remove"){
+     result = (arrList[index] === singleIng.name)?  true: false;
+   }
 
-      
-      if(result === true && btn === "extra"){
-        // console.log(result + " from ifExisted inside map");
+   
+   if(result === true && btn === "extra"){
+     // console.log(result + " from ifExisted inside map");
 
-        arrList[index].c += 1;
-        //revisit
-        arrList[index].price += arrList[index].initPrice;
-        
-        console.log( "count : " + arrList[index].c);
-        return result;
-      }else if(result === true && btn === "remove"){
-        arrList[index].c = 0;
-        console.log("count : " + arrList[index].c);
-        return result;
-      }
-    }
-    // console.log(result + " from ifExisted");
-    return result;
-  }
+     arrList[index].c += 1;
+     //revisit
+     arrList[index].price += arrList[index].initPrice;
+     
+     console.log( "count : " + arrList[index].c);
+     return result;
+   }else if(result === true && btn === "remove"){
+     arrList[index].c = 0;
+     console.log("count : " + arrList[index].c);
+     return result;
+   }
+
+ }
+
+ // console.log(result + " from ifExisted");
+ return result;
+}
 //cusIngHandler = customIngredientHandler
-  const cusIngHandler = (cusIng,btn)=>{
-    switch (btn) {
-      case 'remove':
-        if( removeIngs.includes(cusIng.name) ){
-            console.log('already included');
-        }else{
-          //pop selected item from extra arr if selected item exists 
-          if(ifExisted(extraIngs,cusIng,btn)){
-            setExtraIngs(
-              extraIngs.filter((item)=>(
-              item.name !== cusIng.name
-              ))
-            )
-          //and put that selected item into remove ings arr
-            setRemoveIngs(
-              oldArr => [...oldArr,cusIng.name]
-            );
-          console.log(extraIngs + 'modified ex');
-          }else{
-            //if selected item doesnot exist in extra arr add it to remove arr
-            setRemoveIngs(
-              oldArr => [...oldArr,cusIng.name]
-            );
-          }
+const cusIngHandler = (cusIng,btn)=>{
+ switch (btn) {
+   case 'remove':
+     if( removeIngs.includes(cusIng.name) ){
+         console.log('already included');
+     }else{
+       //pop selected item from extra arr if selected item exists 
+       if(ifExisted(extraIngs,cusIng,btn)){
+         setExtraIngs(
+           extraIngs.filter((item)=>(
+           item.name !== cusIng.name
+           ))
+         )
+       //and put that selected item into remove ings arr
+         setRemoveIngs(
+           oldArr => [...oldArr,cusIng.name]
+         );
+       console.log(extraIngs + 'modified ex');
+       }else{
+         //if selected item doesnot exist in extra arr add it to remove arr
+         setRemoveIngs(
+           oldArr => [...oldArr,cusIng.name]
+         );
+       }
+             
+     }
+
+   break;
+   case 'extra':
+     setRemoveIngs(
+       removeIngs.filter((item)=>(
+         cusIng.name !== item
+       ))
+     )
+     let count = 1;
+
+     if(ifExisted(extraIngs,cusIng,btn)){
+       console.log("already in added to extra");
+     }else if(ifExisted(extraIngs,cusIng,btn) === false){
+       setExtraIngs(
+         //revisit for initprice
+         oldObj => [...oldObj,{name:cusIng.name,initPrice:cusIng.price,price:cusIng.price,c:count}]
+       )
+     }
+
+
+   break;
+   case "reset":
+     setExtraIngs([{}]);
+     setRemoveIngs([]); 
+   break;
+
+   default:
+   break;
+ }
+}
+//orderlist
+const [active, setActive] = React.useState(false)
+const orderListToggleHandler = ()=>{
+   (active === false)? setActive(true): setActive(false);
+}
+
+const [orders, setOrders] = React.useState([]);
+
+
+const addToOrderListHandler = (dish, price, value, rIngs, eIngs)=>{
+ setOrders(
+   (obj)=>[
+           ...obj,
+             {
+               id: dish.id,
+               name: dish.name,
+               quantity: value,
+               price: price,
+               removeIngs: rIngs,
+               extraIngs: eIngs,
+               customIngredient: dish.customIngredient
+             }
+           ]
+ )
+ console.log(orders);
+ //revisit
+ setExtraIngs([{}]);
+ setRemoveIngs([]);
+ //revisit to make data persistant
+ // const ordersInJsonFormat = JSON.stringify(orders);
+ // console.log(ordersInJsonFormat);
+ // if( ordersInJsonFormat !== ['']){
+ //   localStorage.setItem('orderList' , ordersInJsonFormat );
+ // }
+}
+
+const deleteOrderListItemHandler = (id)=>{
+ //revisit to make data persistant
+ // const items = JSON.parse(localStorage.getItem('orderList'));
+ // items.filter((item)=>item.id !== id);
+
+ setOrders(
+     orders.filter((item)=>(
+       item.id !== id
+     ))
+ )
+}
+
+const [editActive, setEditActive] = React.useState({id:null,status:"edit"})
+const editOrderListItemHandler = (id,status)=>{
+
+
+ if(status === "edit"){
+   setEditActive({id: id,status:"done"});
+   //set edit array items
+   setEditExtraIngs(
+     orders.map((item)=>(
+       (item.id === id)?
+          item.extraIngs:""
+       
+     ))
+   ) 
+   setEditRemoveIngs(
+     orders.map((item)=>(
+       (item.id === id)?
+          item.extraIngs:""
+       
+     ))
+   ) 
+   //change orders remove and extra ings
+
+ }else if(status === "done"){
+   setEditActive({id: null,status:"edit"});
+ }
+ 
+}
+
+console.log("... edit r" + editRemoveIngs);
+console.log("... edit e" + editExtraIngs);
+
+
+  return(
+
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" 
+            element={
+              <Home 
                 
-        }
-
-      break;
-      case 'extra':
-        setRemoveIngs(
-          removeIngs.filter((item)=>(
-            cusIng.name !== item
-          ))
-        )
-        let count = 1;
-
-        if(ifExisted(extraIngs,cusIng,btn)){
-          console.log("already in added to extra");
-        }else if(ifExisted(extraIngs,cusIng,btn) === false){
-          setExtraIngs(
-            //revisit for initprice
-            oldObj => [...oldObj,{name:cusIng.name,initPrice:cusIng.price,price:cusIng.price,c:count}]
-          )
-        }
-
-
-      break;
-      case "reset":
-        setExtraIngs([{}]);
-        setRemoveIngs([]); 
-      break;
-      default:
-      break;
-    }
-  }
+                // Dishes={Dishes} 
+                // userVisited={userVisited}
+                // clickHandler={clickHandler} 
+                // closeHandler={closeHandler}
+                // cusIngHandler={cusIngHandler}
+                // addToOrderListHandler={addToOrderListHandler}
+                // deleteOrderListItemHandler={deleteOrderListItemHandler}
+                // editOrderListItemHandler={editOrderListItemHandler}
+                // orderListToggleHandler={orderListToggleHandler}
+              />}>
+          </Route>
+          <Route path="/starter"
+            element={
+              <Starter 
+                // Dishes={Dishes} 
+                // userVisited={userVisited} 
+                // clickHandler={clickHandler}
+                // cusIngHandler={cusIngHandler}
+                // addToOrderListHandler={addToOrderListHandler}
+                // deleteOrderListItemHandler={deleteOrderListItemHandler}
+                // editOrderListItemHandler={editOrderListItemHandler}
+                // orderListToggleHandler={orderListToggleHandler}
+              />}>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+  
+  )
 
 
-  //orderlist
-  const [active, setActive] = React.useState(false)
-  const orderListToggleHandler = (flag)=>{
-      setActive(flag);    
-      
-  }
-
-  const [orders, setOrders] = React.useState([]);
-  const addToOrderListHandler = (dish, price, value, rIngs, eIngs)=>{
-    setOrders(
-      (obj)=>[
-              ...obj,
-                {
-                  id: dish.id,
-                  name: dish.name,
-                  quantity: value,
-                  price: price,
-                  removeIngs: rIngs,
-                  extraIngs: eIngs 
-                }
-              ])
-    console.log(orders);
-  }
-
-  return (
-    <>
-      {
-        (active === true)? <OrderList removeIngs={removeIngs} extraIngs={extraIngs} orders={orders}></OrderList> : ''
-      }
-      <Nav orderListToggleHandler={orderListToggleHandler}></Nav>
-      <CustomerChoice dish={Dishes} maxSize='10' clickHandler={clickHandler}></CustomerChoice>
-      <Menu></Menu>
-      
-      {
-        (userVisited.visited)? <Dish dishes={Dishes} maxSize={userVisited.recentOrderNo} clickHandler={clickHandler}></Dish> : ""
-      }
-      {
-        (open)? 
-        <DishDisplay 
-          selectedDish = {getItem} 
-          close={closeHandler}
-          clickHandler={clickHandler}
-          ></DishDisplay>:""
-      }
-      {
-        (openIngredent)?<Ingredient selectedDish = {getItem} clickHandler={clickHandler} cusIngHandler={cusIngHandler} removeIngs={removeIngs} extraIngs={extraIngs}></Ingredient>:""
-      }
-      {
-        (openOrder)?<AddToOrder selectedDish = {getItem} clickHandler={clickHandler} removeIngs={removeIngs} extraIngs={extraIngs} addToOrderListHandler={addToOrderListHandler}></AddToOrder> : ""
-      }
-    </>
-  );
+  
 }
 
 export default App;

@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useCallback } from "react";
 import dishImg from '../../assets/dish.PNG'
+import { useDispatch } from "react-redux";
+import {closeAllDishCard,openIng,openOrder} from '../../slice/OpenSingleDish';
+import { reset } from "../../slice/CustomizeIng";
 
-const DishDisplay = ({selectedDish,close,clickHandler})=>{ 
+const DishDisplay = ({selectedDish})=>{ 
+    const dispatch = useDispatch();
+
+    const close = ()=>{
+        dispatch(closeAllDishCard());
+        dispatch(reset());
+    }
+
     return(
     <>
         <div className="absolute inset-0  bg-gray-400 blur-3xl"></div>
@@ -14,11 +24,11 @@ const DishDisplay = ({selectedDish,close,clickHandler})=>{
             
                 <div>
                     <span className="text-xs" >customize</span>
-                    <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md" onClick={()=>(clickHandler(selectedDish,true,false))}>Ingredient</div>
+                    <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md" onClick={()=>dispatch(openIng())}>Ingredient</div>
                 </div>
                 <div>
                     <span className="text-xs">proceed to</span>
-                    <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md" onClick={()=>(clickHandler(selectedDish,false,true))}>Order</div>
+                    <div className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md" onClick={()=>dispatch(openOrder())}>Order</div>
                 </div>
 
             </div>

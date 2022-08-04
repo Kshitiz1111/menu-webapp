@@ -1,7 +1,10 @@
 import React from "react";  
 
 const CustomIngredient = ({removeIngs,extraIngs})=>{
-    console.log(removeIngs + "from cusIng");
+    // console.log("This is removeings");
+    // console.log( removeIngs );
+    // console.log("This is extraings");
+    // console.log( extraIngs );
     return(
         <div className="m-4 px-2 border-4 border-dashed">
             <div className="p-1">

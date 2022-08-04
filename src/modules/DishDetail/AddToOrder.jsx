@@ -1,6 +1,16 @@
 import React, { useEffect } from "react";
 import {CustomIngredient} from "./CustomIngredient";
-const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs,addToOrderListHandler} )=>{
+import { useSelector,useDispatch } from "react-redux";
+import { openIng,closeAllDishCard } from "../../slice/OpenSingleDish";
+import { reset } from "../../slice/CustomizeIng";
+import { addToOrderList } from "../../slice/OrderList";
+
+const AddToOrder = ({selectedDish} )=>{
+    ////
+    const dispatch = useDispatch();
+    const removeIngs = useSelector((state)=>state.CustomizedIngredients.removeIngs);
+    const extraIngs = useSelector((state)=>state.CustomizedIngredients.extraIngs);
+    ////
     const [value, setValue] = React.useState(1);
     const [extraItemPrice, setExtraItemPrice] = React.useState();
     const [finalPrice, setFinalPrice] = React.useState(selectedDish.price);
@@ -10,23 +20,38 @@ const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs,addToOrderLi
     //revisit
     for (let index = 1; index < extraIngs.length; index++) {
        sumExtra += extraIngs[index].price;
-    }
-    useEffect(()=>(setExtraItemPrice(sumExtra)),[sumExtra])
+    };
+
+    useEffect(()=>(setExtraItemPrice(sumExtra)),[sumExtra]);
     useEffect(()=>{
         let price = (parseInt(selectedDish.price) * parseInt(value) ) + extraItemPrice;
         
         return(
             setFinalPrice(price)
             )}
-    ,[value,extraItemPrice])
+    ,[value,extraItemPrice]);
     
+    const close = ()=> {
+        const item = {
+            dish: selectedDish,
+            totalPrice: finalPrice,
+            quantity: value,
+            removeIngs: removeIngs,
+            extraIngs: extraIngs
+        };
+        dispatch(addToOrderList(item));
+        dispatch(closeAllDishCard());
+        dispatch(reset());
+    }
+       
+
     return(
     <>
      <div className="absolute inset-0  bg-gray-400 blur-3xl"></div>
        <div className="absolute inset-x-0 top-28 rounded-xl p-5 m-6 bg-gray-100 shadow-md z-30">
        
             <div className="flex justify-between">
-                <span onClick={()=>(clickHandler(selectedDish,true,false))} className="p-2 rounded-full bg-gray-400 shadow-md">customize ingredient</span>
+                <span onClick={()=>dispatch(openIng())} className="p-2 rounded-full bg-gray-400 shadow-md">customize ingredient</span>
                 <div className="relative">
                     <span className="float-right clear-left"><strong>Total: </strong>{finalPrice}rs</span><br />
                     {
@@ -56,7 +81,7 @@ const AddToOrder = ({selectedDish,clickHandler,removeIngs,extraIngs,addToOrderLi
                    
                     <div>
                         <span className="text-xs">add to</span>
-                        <div onClick={()=>(addToOrderListHandler(selectedDish,finalPrice, value,removeIngs,extraIngs))} className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md">Order List</div>
+                        <div onClick={close} className="w-32 font-bold text-xl text-center p-3 rounded-xl bg-gray-400 shadow-md">Order List</div>
                     </div>
                 </div>
             </div>
