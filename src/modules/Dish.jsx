@@ -9,7 +9,7 @@ const Dish = ({dishes,maxSize})=>{
 
     return(
         <>
-        <h3 className='font-bold pl-4'>Your Previous Choice</h3> 
+        
         <div className='flex flex-wrap justify-evenly p-4 z-10'>
             {
 

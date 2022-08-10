@@ -29,6 +29,7 @@ const AddToOrder = ({selectedDish} )=>{
         return(
             setFinalPrice(price)
             )}
+    
     ,[value,extraItemPrice]);
     
     const close = ()=> {

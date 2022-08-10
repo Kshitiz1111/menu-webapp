@@ -35,6 +35,11 @@ export const CustomizedIngs = createSlice({
     name:"customize ingredient",
     initialState,
     reducers: {
+        setIngsToEdit: (state, action)=>{
+          const {extraIng , removeIng} = action.payload;
+          state.extraIngs = extraIng;
+          state.removeIngs = removeIng;
+        },
 
         addExtraIng: (state, action)=>{
             const cusIngs = action.payload;
@@ -84,5 +89,5 @@ export const CustomizedIngs = createSlice({
 })
 
 
-export const {addExtraIng, addRemoveIng, reset} = CustomizedIngs.actions;
+export const {setIngsToEdit, addExtraIng, addRemoveIng, reset} = CustomizedIngs.actions;
 export default CustomizedIngs.reducer;

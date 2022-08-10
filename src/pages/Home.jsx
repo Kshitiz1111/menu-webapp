@@ -43,10 +43,13 @@ const Home = ()=>{
       
        
     
-          
-          {
-             (userVisited.visited)? <Dish dishes={Dishes} maxSize={userVisited.recentOrderNo}></Dish> : ""
-          }
+          <div>
+            <h3 className='font-bold pl-4 my-4'>Your Previous Choice</h3> 
+            {
+              (userVisited.visited)? <Dish dishes={Dishes} maxSize={userVisited.recentOrderNo}></Dish> : ""
+            }
+          </div>
+
           {
             (useSelector((state)=>state.DishCard.openDishCard))? 
             <DishDisplay 
